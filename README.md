@@ -20,3 +20,6 @@ AHA ECG Dataset
 14,000 heart beat samples
 
 https://www.ecri.org/american-heart-association-ecg-database-usb
+
+![Heartbeat](ecg_heart_animation.gif)
+
