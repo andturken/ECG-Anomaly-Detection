@@ -10,23 +10,19 @@ Monitoring hearth health is an important medical problem: abnormalities in heart
 
 # Data sources:
 ## MIT-BIH Arrhythmia Database (Requires creating an account to access the data)
-https://physionet.org/content/mitdb/1.0.0/
-https://console.cloud.google.com/storage/browser/mitdb-1.0.0.physionet.org
+https://physionet.org/content/mitdb/1.0.0/ or https://console.cloud.google.com/storage/browser/mitdb-1.0.0.physionet.org
 Clinical ECG recordings (30 min, dual-lead, 125 Hz) from 48 adults, 23 with rare heart conditions
 109,000 manually segmented, expert-labeled heart beat samples
 Standard ECG data format (.dat) with expert annotations (.atr, text labels)
 
-WFDB Python libary (https://github.com/MIT-LCP/wfdb-python) is required to read ECG data 
+WFDB Python libary (https://github.com/MIT-LCP/wfdb-python) is required to read ECG data in .dat / .atr format
 
-Alternatively,
-## Same data, in csv format, are available from Kaggle:    
+Alternatively, same data, in csv format, are available from [Kaggle](https://www.kaggle.com/mondejar/mitbih-database)   
 (requires Kaggle account for access)
 
 ## Pre-processed ECG data, in the form of numpy arrays, are available in this repository:
 - inset link -
 
-
-![Heartbeat](ecg_heart_animation.gif)
 
 
 # Replicating the data analyses
@@ -58,6 +54,20 @@ python
 This script will:
 
 # Exploratory Data Analysis 
+Read continuous ECG into Python, visually
+inspect data quality
+Extract ECG segments for each heart beat
+Individual segments should comparable! 
+Extensive pre-processing required 
+Apply linear drift correction (detrend)
+Align segments so same peak latency
+ Baseline correction 
+ Minimal temporal smoothing
+ Scale ECG peak amplitude to 100
+Remove noisy segments 
+Recording artifacts: ~2% of data excluded
+
+
 
 ## Key observations from EDA
 
