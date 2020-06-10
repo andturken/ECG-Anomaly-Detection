@@ -1,15 +1,10 @@
 # ECG-Anomaly-Detection
 Machines Learning for Monitoring Abnormal Heart Beats on Electrocardiogram (ECG) Recordings
 
-# Overview
-Use single-channel continuous electrocardiogram (ECG) time-series recordings to train a deep learning network in order to:
-1) Detect individual heartbeats; quantify onset, peak latency, duration
-2) Detect irregular heartbeats; classify anomaly type
-3) Flag time windows during which hearbeats are arhythmic (irregular R-R intervals)
-4) Identify patients whose heartbeats patterns are anomalous (e.g., diagnose arhythmia)
-5) Apply ECG anomaly detection algorithm trained on one clinical dataset to ECG datasets from other sources (e.g., transfer learning)
 
 # Problem Statement
+Monitoring hearth health is an important medical problem: abnormalities in heart activity can be warning signs of serious adverse medical events such as heart attack and stroke. Heart activity is monitored in clinical settings with the electrocardiogram (ECG), as device which records and digitizes electrical signals from the heart. Internet-of-things (IoT) devices, such as smartwatches, can now record ECG signals. These can be transmitted to a computer in order to detect and classify abnormal heartbeats in order to warn users as well as their heath care providers. State-of-the-art medical ECG systems acquire high-temporal-resolution signals from several channels at once, and process these signals on dedicated hardware. ECG recordings from smartwatches currently provide data from a single channel, as lower temporal resolution, and possibly with lower signal quality. ECG data from a smarthwatch might be processed on a  device with low power computational power, such as a smartphone, or a user's laptop. Thus, applying standard machine learning approaches to detect and classify abnormal heartbeats from low resolution ECG data is a worthwhile goal for improving new IoT-based ECG recording system.  For this purpose, the present project implements and assesses Python-based machine learning solutions to learn to classify ECG heart beat recordings.
+
 
 # Methods
 
@@ -34,25 +29,20 @@ Alternatively,
 ![Heartbeat](ecg_heart_animation.gif)
 
 
-# Replicating the data analyses steps
+# Replicating the data analyses
 
-
-The entire library of oral arguments I used can be obtained from the following repository in its ./oyez/cases directory.
-
-The functions I used to parse, combine, and model this data are contained in this repository's src directory.
-
-To replicate the parsing, dataframe creation, and model tuning that this repository covers, one can run the following:
-
-# Clone this repository
+## To clone this repository
 git clone https://github.com/andturken/ECG-Anomaly-Detection.git
 cd ECG-Anomaly-Detection
 
-#Run Script to create data matrices:
+Depends on: Python 3.7, scipy, pandas, numpy, matplotlib, sklearn (0.23.1), imbalanced-learn
 
-Required Packages: Python 3, scipy, pandas, numpy, matplotlib, sklearn, imbalanced-learn
+## Run Script to create data matrices:
+
+
 
 ## Pre-process ECG data
-python create_df_and_fit_models_script.py
+python ---.py
 This will: 1-) Read MIT-BIH ECG data in CSV format into memory 2-) Extract ECG segments corresponding to individual heart beats
 
 The result is saved in ---
@@ -67,12 +57,28 @@ python
 
 This script will:
 
+# Exploratory Data Analysis 
+
+## Key observations from EDA
+
+# Modeling Results
+
+##
+
+##
 
 # Conclusion
 
 
 # Future Work
 
+
+Use single-channel continuous electrocardiogram (ECG) time-series recordings to train a deep learning network in order to:
+1) Detect individual heartbeats; quantify onset, peak latency, duration
+2) Detect irregular heartbeats; classify anomaly type
+3) Flag time windows during which hearbeats are arhythmic (irregular R-R intervals)
+4) Identify patients whose heartbeats patterns are anomalous (e.g., diagnose arhythmia)
+5) Apply ECG anomaly detection algorithm trained on one clinical dataset to ECG datasets from other sources (e.g., transfer learning)
 
 
 
