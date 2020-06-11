@@ -113,7 +113,7 @@ Use single-channel continuous electrocardiogram (ECG) time-series recordings to 
 1) Detect individual heartbeats; quantify onset, peak latency, duration
 2) Detect irregular heartbeats; classify anomaly type
 3) Flag time windows during which hear beats are arhythmic (i.e., irregular R-R intervals)
-4) Identify patients whose heartbeats patterns are anomalous (e.g., diagnose arrhythmia)
+4) Identify patients whose heartbeats patterns are anomalous (e.g., aim to diagnose heart arrhythmia or atrilial fibrillation)
 5) Apply ECG anomaly detection algorithm trained on one clinical dataset to ECG datasets from other sources (e.g., transfer learning)
 6) Most importantly for developing a real-world clinical application, explore appropriate semi-supervised and transfer learning approaches to make best use of available expert-labeled training data
 
