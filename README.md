@@ -28,7 +28,7 @@ cd ECG-Anomaly-Detection
 Depends on: Python 3.7, scipy, pandas, numpy, matplotlib, sklearn (0.23.1), imbalanced-learn
 
 
-## Pre-processing ECG data
+## Pre-processing ECG data / EDA
 
 The script [download_preprocess_ecg.py](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/download_preprocess_ecg.py) will: 
 1-) Read MIT-BIH ECG data in CSV format into memory 
@@ -46,31 +46,50 @@ The resulting pre-processed ECG dataset is saved in the [preprocessed_ecg folder
  
 The script [load_preprocessed_ecg.py](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/load_ecg_data_matrix.py) contains functions that will load preprocessed ECG data matrices into python memory, and for implementing threshold-based artifact rejection
 
-
-## Modeling: 
-python
-
-This script will:
-
-# Exploratory Data Analysis 
-Read continuous ECG into Python, visually
-inspect data quality
-Extract ECG segments for each heart beat
-Individual segments should comparable! 
-Extensive pre-processing required 
-Apply linear drift correction (detrend)
-Align segments so same peak latency
- Baseline correction 
- Minimal temporal smoothing
- Scale ECG peak amplitude to 100
-Remove noisy segments 
-Recording artifacts: ~2% of data excluded
-
-
-
 ## Key observations from EDA
+Appropriate pre-processing is critical before further modeling the data as:
+- Continuous ECG data shows low frequency amplitude fluctuations
+- There are occasional high amplitude spikes
+- There is variability in the peak latency as well as individual ECG components from heart beat to heart beat.
+- There are occasional bursts of high frequency noise
+- Adjusting for baseline drifts, aligning ECG peaks across heart beat segments, rejecting artifactual segments and scaling all heart    beat segments to constant amplitude ensures that distance and similarity measures can be correctly computed for optimal classification
+- Due to high class imbalance between normal and abnormal heart beats, modeling and model evaluation metrics have to take this class probability imbalance into account
 
-# Modeling Results
+## Modeling - Classification of heartbeats into Normal vs one of four possible abnormality types
+
+The modeling steps are illustrated in the accompanying jupyter notebook, [Model_ecg_kNN_LogReg_RF.ipynb](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/Model_ecg_kNN_LogReg_RF.ipynb)
+
+The python script [model_ecg.py](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/model_ecg.py) can be used to execute all modeling steps from the console, and to save best performing models as sklearn joblib files. Saved models can be loaded into memory and executed with, e.g.:
+
+from sklearn import joblib
+clf = joblib.load('Model_LogisticRegression.joblib')
+predicted_abnormality_type = clf.predict(ECG_matrix__test)
+(0=Normal; 1,2,3,4: one of four possible abnormal heart beat types
+
+### Metric for evaluating model performance: 
+Five-fold cross-validated F1, weighted across five clasess (f1 for one-vs-rest classification for each class), inversely weighted by class probability
+
+### Rationale for choosing the weighted F1 metric: 
+1) There is high imbalance across classes; 2) Missing abnormal heart beats, which might predict disease, and declaring abnormalities when there are none,are both undesirable in a clinical application. F1 captures the appropriate balance between precision and recall
+
+### Overview of modeling steps:
+1- Patient datasets were split into two groups, n1=21 and n2=14. 
+2- Data from the first group was further subdivided into a development set (75%), and a held-out test set
+3- The development data set was used for five-fold cross-validated model hyperparameter tuning based on the weighted F1 metric
+4- The best performing model hyperparameters were used to assess how well the model performs on unseen test data from the same group of individuals on whose data the model was trained
+5- The same model was applied to held out test data from the second group of patient datasets, in order to assess how well the model performs on a completely different group of individuals, whose data were not included in the training datasets
+6- Due to the strong imbalance of heart beat abnormality class probabilities, stratified sampling was applied at each data splitting stage in order to approximately preserve the relative frequencies of normal vs abnormal heart beats, as well as the four individuidual heart beat abnormality types.
+
+Four models were considered:
+
+1- Baseline model -  Random guess from a multinomial distribution based on class probabilities for each of the five possible classes
+Five-fold cross-validation, each time estimating class prior probabilities from training data, and generating predictions for held out data. The multinomial random guess baseline model performed on average at 59% weighted F1 accuracy.
+
+2- k Nearest Neighbors (kNN) - Hyperparameter = Neighborhood size (optimal k=3). Best performing model. Weighted F1 = 
+
+
+
+
 
 ##
 
