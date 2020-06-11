@@ -32,7 +32,7 @@ Depends on: Python 3.7, scipy, pandas, numpy, matplotlib, sklearn (0.23.1), imba
 
 The script [download_preprocess_ecg.py](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/download_preprocess_ecg.py) will: 
 1-) Read MIT-BIH ECG data in CSV format into memory 
-2-) Extract ECG segments corresponding to individual heart beats
+2-) Extract ECG segments corresponding to individual heart beats (~2500 heart beats per patients, consistent with 80 beats per min)
 3-) Apply linear drift and pre-peak baseline corrections, alignment of ECG peak latency across samples, amplitude scaling to 100
 4-) Reject ECG segments with std across time points > 3 s.d., and raw peak amp > 3 s.d., as these are likely recording artifacts
 5-) Only normal heart beats (>90% of all ECG data) and the four most common abnormal heart beat ECG types are used
@@ -99,12 +99,13 @@ Weighted average F1 = 98% when training and testing on data from same group; = 7
 (unweighted F1 drops down to 43% in the latter case, similar to the other models)
 
 
-# Conclusion
+# Conclusions and Future Directions
 
-Highly accurate classification of abnormalities in ECG-recorded single heart beats (importantly, with relatively low quality single channel ECG data, as might be expected in IoT devices such as smart watches) is possible. 
+Highly accurate classification of abnormalities in ECG-recorded single heart beats (importantly, with relatively low quality single channel ECG data, as might be expected in IoT devices such as smart watches) is possible using commonly employed machine learning techniques - provided that extensive labeled training data is available from the same group of individuals whose ECG will later be monitored for heart abnormalities. 
 
-# Future Work
+However, there is considerably room for improvement when training models with one group of individual, and applying the same models to an entirely different group of individuals. Labeling 2.5K single heart beats manually in order to generate expert-labeled training data is very expensive and highly impractical for any large-scale ECG monitoring application. Better transfer of learning is an important open question
 
+For the immediate future:
 
 Use single-channel continuous electrocardiogram (ECG) time-series recordings to train a deep learning network in order to:
 1) Detect individual heartbeats; quantify onset, peak latency, duration
@@ -112,7 +113,7 @@ Use single-channel continuous electrocardiogram (ECG) time-series recordings to 
 3) Flag time windows during which hearbeats are arhythmic (irregular R-R intervals)
 4) Identify patients whose heartbeats patterns are anomalous (e.g., diagnose arhythmia)
 5) Apply ECG anomaly detection algorithm trained on one clinical dataset to ECG datasets from other sources (e.g., transfer learning)
-
+6) Importantly,explore appropriate semi-supervised and transfer learning approaches. 
 
 
 
