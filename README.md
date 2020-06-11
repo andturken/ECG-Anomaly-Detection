@@ -28,7 +28,7 @@ cd ECG-Anomaly-Detection
 Depends on: Python 3.7, scipy, pandas, numpy, matplotlib, sklearn (0.23.1), imbalanced-learn
 
 
-## Pre-processing ECG data / EDA
+## Pre-processing ECG data / Exploratory data analysis (EDA)
 
 The script [download_preprocess_ecg.py](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/download_preprocess_ecg.py) will: 
 1-) Read MIT-BIH ECG data in CSV format into memory 
@@ -54,6 +54,12 @@ Appropriate pre-processing is critical before further modeling the data as:
 - There are occasional bursts of high frequency noise
 - Adjusting for baseline drifts, aligning ECG peaks across heart beat segments, rejecting artifactual segments and scaling all heart    beat segments to constant amplitude ensures that distance and similarity measures can be correctly computed for optimal classification
 - Due to high class imbalance between normal and abnormal heart beats, modeling and model evaluation metrics have to take this class probability imbalance into account
+
+![Continuous ECG](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/images/Continuous_ECG_sample.jpeg)      ![Single ECG segment](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/images/ECG_segments_standardized.jpg)
+
+Left: Example of continuous ECG time series (containing several normal heart beats) exhibiting slow baseline amplitude fluctuations, as well as differences in signal gain across time, causing heart beats in the latter half of the tine series to appear to have larger peak amplitudes. While a diagnostician who is visually monitoring for abnormal heart beats mentally takes variable in recording quality into account, an automated computer algorithm can mistake such changes due to the recording environment for genuine changes in heart activity, confounding similarity and distance computations when comparing single heart beats based on ECG signal amplitude at each time point. Also note that the time course of short ECG changes surrounding each ECG peak varies from beat to beat. 
+
+Right: ECG segments corresponding to individual heart beats become better comparable for computational analysis, after baseline, signal gain and peak latency variability is controlled for. EDA showed that without such corrections, classification accuracy can be reduced by up to 20%.
 
 ## Modeling - Classification of heartbeats into Normal vs one of four possible abnormality types
 
