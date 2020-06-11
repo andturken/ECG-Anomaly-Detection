@@ -3,7 +3,7 @@ Machines Learning for Monitoring Abnormal Heart Beats on Electrocardiogram (ECG)
 
 
 # Problem Statement
-Monitoring hearth health is an important medical problem: abnormalities in heart activity can be warning signs of serious adverse medical events such as heart attack and stroke. Heart activity is monitored in clinical settings with the electrocardiogram (ECG), as device which records and digitizes electrical signals from the heart. Internet-of-things (IoT) devices, such as smartwatches, can now record ECG signals. These can be transmitted to a computer in order to detect and classify abnormal heartbeats in order to warn users as well as their heath care providers. State-of-the-art medical ECG systems acquire high-temporal-resolution signals from several channels at once, and process these signals on dedicated hardware. ECG recordings from smartwatches currently provide data from a single channel, as lower temporal resolution, and possibly with lower signal quality. ECG data from a smarthwatch might be processed on a  device with low power computational power, such as a smartphone, or a user's laptop. Thus, applying standard machine learning approaches to detect and classify abnormal heartbeats from low resolution ECG data is a worthwhile goal for improving new IoT-based ECG recording system.  For this purpose, the present project implements and assesses Python-based machine learning solutions to learn to classify ECG heart beat recordings.
+Monitoring hearth health is an important medical problem: abnormalities in heart activity can be warning signs of serious adverse medical events such as heart attack and stroke. Heart activity is monitored in clinical settings with the electrocardiogram (ECG), as device which records and digitizes electrical signals from the heart. Internet-of-things (IoT) devices, such as smartwatches, can now record ECG signals. These can be transmitted to a computer in order to detect and classify abnormal heartbeats in order to warn users as well as their heath care providers. State-of-the-art medical ECG systems acquire high-temporal-resolution signals from several channels at once, and process these signals on dedicated hardware. ECG recordings from smartwatches currently provide data from a single channel, as lower temporal resolution, and possibly with lower signal quality. ECG data from a smartwatch might be processed on a  device with low power computational power, such as a smartphone, or a user's laptop. Thus, applying standard machine learning approaches to detect and classify abnormal heartbeats from low resolution ECG data is a worthwhile goal for improving new IoT-based ECG recording system.  For this purpose, the present project implements and assesses Python-based machine learning solutions to learn to classify ECG heart beat recordings.
 
 
 # Data sources:
@@ -13,7 +13,7 @@ Clinical ECG recordings (30 min, dual-lead, 125 Hz) from 48 adults, 23 with rare
 109,000 manually segmented, expert-labeled heart beat samples
 Standard ECG data format (.dat) with expert annotations (.atr, text labels)
 
-WFDB Python libary (https://github.com/MIT-LCP/wfdb-python) is required to read ECG data in .dat / .atr format
+WFDB Python library (https://github.com/MIT-LCP/wfdb-python) is required to read ECG data in .dat / .atr format
 
 Alternatively, same data, in csv format, are available from [Kaggle](https://www.kaggle.com/mondejar/mitbih-database)   
 (requires Kaggle account for access)
@@ -37,7 +37,7 @@ The script [download_preprocess_ecg.py](https://github.com/andturken/ECG-Anomaly
 4-) Reject ECG segments with std across time points > 3 s.d., and raw peak amp > 3 s.d., as these are likely recording artifacts
 5-) Only normal heart beats (>90% of all ECG data) and the four most common abnormal heart beat ECG types are used
 6-) The resulting numpy arrays are ready for modeling: 
-    data_all: rows - individual ecg segments, corresponding to single heart beats; columns: time points along the ECG time course
+    data_all: rows - individual ECG segments, corresponding to single heart beats; columns: time points along the ECG time course
     annotations_all - expert-provided labels, indicating whether a heart beat is normal ('N'), or the type of abnormality ('A', 'V'...)
     patients_all - for each heart beat segment (rows of data_all matrix), the id code for the corresponding patient
     onsets_all - for each heart beat segment, its onset latency relative to the corresponding continuous ECG data file
@@ -50,14 +50,14 @@ The script [load_preprocessed_ecg.py](https://github.com/andturken/ECG-Anomaly-D
 Appropriate pre-processing is critical before further modeling the data as:
 - Continuous ECG data shows low frequency amplitude fluctuations
 - There are occasional high amplitude spikes
-- There is variability in the peak latency as well as individual ECG components from heart beat to heart beat.
+- There is variability in the peak latency as well as individual timing and amplitude of ECG components from heart beat to heart beat
 - There are occasional bursts of high frequency noise
 - Adjusting for baseline drifts, aligning ECG peaks across heart beat segments, rejecting artifactual segments and scaling all heart    beat segments to constant amplitude ensures that distance and similarity measures can be correctly computed for optimal classification
 - Due to high class imbalance between normal and abnormal heart beats, modeling and model evaluation metrics have to take this class probability imbalance into account
 
 ## Modeling - Classification of heartbeats into Normal vs one of four possible abnormality types
 
-The modeling steps are illustrated in the accompanying jupyter notebook, [Model_ecg_kNN_LogReg_RF.ipynb](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/Model_ecg_kNN_LogReg_RF.ipynb)
+The modeling steps are illustrated in the accompanying Jupyter notebook, [Model_ecg_kNN_LogReg_RF.ipynb](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/Model_ecg_kNN_LogReg_RF.ipynb)
 
 The python script [model_ecg.py](https://github.com/andturken/ECG-Anomaly-Detection/blob/master/model_ecg.py) can be used to execute all modeling steps from the console, and to save best performing models as sklearn joblib files. Saved models can be loaded into memory and executed with, e.g.:
 
@@ -67,10 +67,12 @@ predicted_abnormality_type = clf.predict(ECG_matrix__test)
 (0=Normal; 1,2,3,4: one of four possible abnormal heart beat types
 
 ### Metric for evaluating model performance: 
-Five-fold cross-validated F1, weighted across five clasess (f1 for one-vs-rest classification for each class), inversely weighted by class probability
+Five-fold cross-validated F1, weighted across five classes (F1 for one-vs-rest classification for each class), inversely weighted by the corresponding class probability
 
 ### Rationale for choosing the weighted F1 metric: 
-1) There is high imbalance across classes; 2) Missing abnormal heart beats, which might predict disease, and declaring abnormalities when there are none,are both undesirable in a clinical application. F1 captures the appropriate balance between precision and recall
+1) There is high imbalance across classes; 2) Missing abnormal heart beats, which might predict disease, and declaring abnormalities when there are none (potentially causing needless distress),are both undesirable in a clinical application. F1 captures the appropriate balance between precision and recall
+
+Note: While for purposes of this analysis, the focus is on the classification of ECG segments for individual heart beats, in any diagnostic clinical application, assessment of abnormal heart activity would rely on several minutes worth of ECG  recordings, corresponding to hundreds of heart beats. Therefore, any metric based on how well single heart beats are classified can be can be considered conservative.
 
 ### Overview of modeling steps:
 1- Patient datasets were split into two groups, n1=21 and n2=14. 
@@ -78,8 +80,8 @@ Five-fold cross-validated F1, weighted across five clasess (f1 for one-vs-rest c
 3- The development data set was used for five-fold cross-validated model hyperparameter tuning based on the weighted F1 metric
 4- The best performing model hyperparameters were used to assess how well the model performs on unseen test data from the same group of individuals on whose data the model was trained
 5- The same model was applied to held out test data from the second group of patient datasets, in order to assess how well the model performs on a completely different group of individuals, whose data were not included in the training datasets
-6- Due to the strong imbalance of heart beat abnormality class probabilities, stratified sampling was applied at each data splitting stage in order to approximately preserve the relative frequencies of normal vs abnormal heart beats, as well as the four individuidual heart beat abnormality types.
-7- When available on sklearn classifier apis, the option class_weights='balanced' was used when specifying models, in order to take class imbalance into account when computing cost functions
+6- Due to the strong imbalance of heart beat abnormality class probabilities, stratified sampling was applied at each data splitting stage in order to approximately preserve the relative frequencies of normal vs abnormal heart beats, as well as the four individual heart beat abnormality types.
+7- When available on sklearn classifier object API's, the option class_weights='balanced' was used when specifying models, in order to take class imbalance into account when computing cost functions
 
 Four models were considered:
 
@@ -110,10 +112,10 @@ For the immediate future:
 Use single-channel continuous electrocardiogram (ECG) time-series recordings to train a deep learning network in order to:
 1) Detect individual heartbeats; quantify onset, peak latency, duration
 2) Detect irregular heartbeats; classify anomaly type
-3) Flag time windows during which hearbeats are arhythmic (irregular R-R intervals)
-4) Identify patients whose heartbeats patterns are anomalous (e.g., diagnose arhythmia)
+3) Flag time windows during which hear beats are arhythmic (i.e., irregular R-R intervals)
+4) Identify patients whose heartbeats patterns are anomalous (e.g., diagnose arrhythmia)
 5) Apply ECG anomaly detection algorithm trained on one clinical dataset to ECG datasets from other sources (e.g., transfer learning)
-6) Importantly,explore appropriate semi-supervised and transfer learning approaches. 
+6) Most importantly for developing a real-world clinical application, explore appropriate semi-supervised and transfer learning approaches to make best use of available expert-labeled training data
 
 
 
