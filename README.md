@@ -79,24 +79,29 @@ Five-fold cross-validated F1, weighted across five clasess (f1 for one-vs-rest c
 4- The best performing model hyperparameters were used to assess how well the model performs on unseen test data from the same group of individuals on whose data the model was trained
 5- The same model was applied to held out test data from the second group of patient datasets, in order to assess how well the model performs on a completely different group of individuals, whose data were not included in the training datasets
 6- Due to the strong imbalance of heart beat abnormality class probabilities, stratified sampling was applied at each data splitting stage in order to approximately preserve the relative frequencies of normal vs abnormal heart beats, as well as the four individuidual heart beat abnormality types.
+7- When available on sklearn classifier apis, the option class_weights='balanced' was used when specifying models, in order to take class imbalance into account when computing cost functions
 
 Four models were considered:
 
 1- Baseline model -  Random guess from a multinomial distribution based on class probabilities for each of the five possible classes
 Five-fold cross-validation, each time estimating class prior probabilities from training data, and generating predictions for held out data. The multinomial random guess baseline model performed on average at 59% weighted F1 accuracy.
 
-2- k Nearest Neighbors (kNN) - Hyperparameter = Neighborhood size (optimal k=3). Best performing model. Weighted F1 = 
+2- k Nearest Neighbors (kNN) - Hyperparameter = Neighborhood size (optimal k=3). Best performing model. 
+Weighted average F1 = 99% when training and testing on data from same group; = 80% when applied to a novel group of individuals
+(However, unweighted F1 drops down to 48% in the latter case, suggesting that the shapes of abnormal heart beat ECGs are less consistent across individuals than normal ECG patterns)
 
+3- Logistic regression (LogReg) - Hyperparameter = regularization strength (optimal C=100, light regularization). Lowest performing  
+Weighted average F1 = 90% when training and testing on data from same group; = 64% when applied to a novel group of individuals
+(unweighted F1 drops down to 31% in the latter case, indicating poor transfer of learned abnormality parameters across groups)
 
+3- Balanced random forest - Hyperparameters (optimized with grid search): number of trees   (optimal = 1000, maximum considered); max number of features at each split (optimal = log2(number of ECG time points)). Second best performing model.
+Weighted average F1 = 98% when training and testing on data from same group; = 78% when applied to a novel group of individuals
+(unweighted F1 drops down to 43% in the latter case, similar to the other models)
 
-
-
-##
-
-##
 
 # Conclusion
 
+Highly accurate classification of abnormalities in ECG-recorded single heart beats (importantly, with relatively low quality single channel ECG data, as might be expected in IoT devices such as smart watches) is possible. 
 
 # Future Work
 
